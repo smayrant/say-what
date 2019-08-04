@@ -4,14 +4,17 @@
 	"description": "",
 	"main": "app.js",
 	"scripts": {
-		"start": "nodemon app.js"
+		"start": "nodemon db"
 	},
 	"keywords": [],
 	"author": "Sheldrick Mayrant",
 	"license": "ISC",
 	"dependencies": {
+		"dotenv": "^8.0.0",
 		"ejs": "^2.6.2",
 		"express": "^4.17.1",
-		"nodemon": "^1.19.1"
+		"mongodb": "^3.3.0-beta2",
+		"nodemon": "^1.19.1",
+		"validator": "^11.1.0"
 	}
 }

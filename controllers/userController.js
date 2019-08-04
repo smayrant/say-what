@@ -7,7 +7,11 @@ exports.logout = () => {};
 exports.register = (req, res) => {
 	let user = new User(req.body);
 	user.register();
-	res.send("you just registered");
+	if (user.errors.length) {
+		res.send(user.errors);
+	} else {
+		res.send("you just registered");
+	}
 };
 
 exports.home = (req, res) => {

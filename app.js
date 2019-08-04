@@ -13,4 +13,5 @@ app.set("view engine", "ejs");
 
 app.use("/", router);
 
-app.listen(3000);
+// export the app to be used in the mongodb connection file
+module.exports = app;

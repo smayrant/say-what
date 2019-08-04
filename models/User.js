@@ -58,6 +58,25 @@ User.prototype.validate = function () {
 	}
 };
 
+User.prototype.login = function () {
+	return new Promise((resolve, reject) => {
+		this.sanitizeInput();
+		// check if a user
+		usersCollection
+			.findOne({ username: this.data.username })
+			.then(attemptedUser => {
+				if (attemptedUser && attemptedUser.password == this.data.password) {
+					resolve("congrats");
+				} else {
+					reject("invalid");
+				}
+			})
+			.catch(function () {
+				reject("Please try again later");
+			});
+	});
+};
+
 // register a user.
 User.prototype.register = function () {
 	// ensure user input contains only string data

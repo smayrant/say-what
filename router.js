@@ -6,4 +6,6 @@ router.get("/", userContoller.home);
 
 router.post("/register", userContoller.register);
 
+router.post("/login", userContoller.login);
+
 module.exports = router;

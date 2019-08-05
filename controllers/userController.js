@@ -6,14 +6,22 @@ exports.login = function (req, res) {
 		.login()
 		.then(function (result) {
 			req.session.user = { username: user.data.username };
-			res.send(result);
+			// once the session data has been saved, redirect the user to the homepage
+			req.session.save(function () {
+				res.redirect("/");
+			});
 		})
 		.catch(function (err) {
 			res.send(err);
 		});
 };
 
-exports.logout = function () {};
+// on logout, the user is redirected back to the home page after the session and its stored info has been destroyed
+exports.logout = function (req, res) {
+	req.session.destroy(function () {
+		res.redirect("/");
+	});
+};
 
 exports.register = function (req, res) {
 	let user = new User(req.body);
@@ -25,10 +33,10 @@ exports.register = function (req, res) {
 	}
 };
 
+// if the user has session data, the homepage will be the actual app, otherwise their homepage will be the guest page
 exports.home = function (req, res) {
-	// if the user has session data, send them to the actual  app, otherwise send them to the guest page
 	if (req.session.user) {
-		res.send("welcome to the app");
+		res.render("home-dashboard", { username: req.session.user.username });
 	} else {
 		res.render("home-guest");
 	}

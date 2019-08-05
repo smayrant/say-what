@@ -5,6 +5,7 @@ exports.login = function (req, res) {
 	user
 		.login()
 		.then(function (result) {
+			req.session.user = { username: user.data.username };
 			res.send(result);
 		})
 		.catch(function (err) {
@@ -25,5 +26,10 @@ exports.register = function (req, res) {
 };
 
 exports.home = function (req, res) {
-	res.render("home-guest");
+	// if the user has session data, send them to the actual  app, otherwise send them to the guest page
+	if (req.session.user) {
+		res.send("welcome to the app");
+	} else {
+		res.render("home-guest");
+	}
 };

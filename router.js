@@ -1,13 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const userContoller = require("./controllers/userController");
+const userController = require("./controllers/userController");
+const postController = require("./controllers/postController");
 
-router.get("/", userContoller.home);
+router.get("/", userController.home);
 
-router.post("/register", userContoller.register);
+router.post("/register", userController.register);
 
-router.post("/login", userContoller.login);
+router.post("/login", userController.login);
 
-router.post("/logout", userContoller.logout);
+router.post("/logout", userController.logout);
+
+// post routes
+router.get('/create-post', userController.routeProtection, postController.viewCreateScreen)
 
 module.exports = router;

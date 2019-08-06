@@ -92,15 +92,16 @@ User.prototype.login = function () {
 			.findOne({ username: this.data.username })
 			.then(attemptedUser => {
 				if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
-					this.data = attempteduser
+					this.data = attemptedUser;
 					this.getAvatar();
 					resolve("You have logged in");
 				} else {
 					reject("Invalid credentials");
 				}
 			})
-			.catch(function () {
-				reject("Please try again later");
+			.catch(function (err) {
+				console.log(err);
+				reject(err);
 			});
 	});
 };

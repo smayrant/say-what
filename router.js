@@ -14,4 +14,6 @@ router.post("/logout", userController.logout);
 // post routes
 router.get('/create-post', userController.routeProtection, postController.viewCreateScreen)
 
+router.post('/create-post', userController.routeProtection, postController.create)
+
 module.exports = router;

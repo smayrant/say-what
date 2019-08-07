@@ -25,4 +25,6 @@ router.get("/post/:id/edit", userController.routeProtection, postController.view
 
 router.post("/post/:id/edit", userController.routeProtection, postController.edit);
 
+router.post("/post/:id/delete", userController.routeProtection, postController.delete);
+
 module.exports = router;

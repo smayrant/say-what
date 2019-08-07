@@ -21,4 +21,8 @@ router.post("/create-post", userController.routeProtection, postController.creat
 
 router.get("/post/:id", postController.viewSingle);
 
+router.get("/post/:id/edit", userController.routeProtection, postController.viewEditScreen);
+
+router.post("/post/:id/edit", userController.routeProtection, postController.edit);
+
 module.exports = router;

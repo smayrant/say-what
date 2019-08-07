@@ -1,4 +1,5 @@
 const postsCollection = require("../db").collection("posts");
+const User = require("./User");
 const ObjectID = require("mongodb").ObjectID;
 
 let Post = function (data, userid) {
@@ -20,7 +21,7 @@ Post.prototype.sanitizeInput = function () {
 	this.data = {
 		title: this.data.title.trim(),
 		body: this.data.body.trim(),
-		createdData: new Date(),
+		createdDate: new Date(),
 		author: ObjectID(this.userid)
 	};
 };
@@ -53,6 +54,55 @@ Post.prototype.create = function () {
 			reject(this.errors);
 		}
 	});
+};
+
+Post.reusablePostQuery = function (uniqueOperations) {
+	return new Promise(async function (resolve, reject) {
+		let aggOperations = uniqueOperations.concat([
+			// find a post based on its id and the corresponding user
+			{ $lookup: { from: "users", localField: "author", foreignField: "_id", as: "authorDocument" } },
+			{
+				$project: {
+					title: 1,
+					body: 1,
+					createdDate: 1,
+					author: { $arrayElemAt: [ "$authorDocument", 0 ] }
+				}
+			}
+		]);
+		let posts = await postsCollection.aggregate(aggOperations).toArray();
+
+		// clean up author property in each post object
+		posts = posts.map(function (post) {
+			post.author = {
+				username: post.author.username,
+				avatar: new User(post.author, true).avatar
+			};
+			return post;
+		});
+		resolve(posts);
+	});
+};
+
+// find a post based on its id
+Post.findSingleById = function (id) {
+	return new Promise(async function (resolve, reject) {
+		// if the id isn't a string or a valid MongoDB id, reject and then return
+		if (typeof id !== "string" || !ObjectID.isValid(id)) {
+			reject();
+			return;
+		}
+		let posts = await Post.reusablePostQuery([ { $match: { _id: new ObjectID(id) } } ]);
+		if (posts.length) {
+			resolve(posts[0]);
+		} else {
+			reject();
+		}
+	});
+};
+
+Post.findByAuthorId = function (authorId) {
+	return Post.reusablePostQuery([ { $match: { author: authorId } }, { $sort: { createdDate: -1 } } ]);
 };
 
 module.exports = Post;

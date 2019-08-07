@@ -11,9 +11,14 @@ router.post("/login", userController.login);
 
 router.post("/logout", userController.logout);
 
-// post routes
-router.get('/create-post', userController.routeProtection, postController.viewCreateScreen)
+// profile routes
+router.get("/profile/:username", userController.ifUserExists, userController.profilePostsScreen);
 
-router.post('/create-post', userController.routeProtection, postController.create)
+// post routes
+router.get("/create-post", userController.routeProtection, postController.viewCreateScreen);
+
+router.post("/create-post", userController.routeProtection, postController.create);
+
+router.get("/post/:id", postController.viewSingle);
 
 module.exports = router;

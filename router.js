@@ -27,4 +27,5 @@ router.post("/post/:id/edit", userController.routeProtection, postController.edi
 
 router.post("/post/:id/delete", userController.routeProtection, postController.delete);
 
+router.post("/search", postController.search);
 module.exports = router;
